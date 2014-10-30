@@ -212,11 +212,10 @@ def scrabble(rack,size,pmap):
     # We will let you do that in the helper function.
     
     racklist= list(rack)
-    goldenlist =[]
+    goldenList =[]
     for x in racklist:
-        goldenlist+=scrabble_helper(x,rack,size,pmap)
-    
-    return goldenlist
+        goldenList+=scrabble_helper(x,rack,size,pmap)
+    return goldenList
 
 
 def scrabble_helper(prefix,rack,size,pmap):
@@ -248,24 +247,34 @@ def scrabble_helper(prefix,rack,size,pmap):
     #     3. there are no words that complete prefix
     
     # In the case of 2 and 3, you should return the empty list.
-    
     assert (prefix=="" or prefix.isalpha())
-    assert (rack=="" or rack.isalpha())
+    assert (len(rack)==0 or rack.isalpha())
     assert (size>=0)
     assert (type(pmap)==dict)
     
-    playableWords=[]
-    workableRack=list(rack)
-    if size==0: return playableWords
-    elif len(rack)==0: return playableWords
-    elif autocomplete(prefix,pmap)==[]: return playableWords
+    
+    
+    if size==1:
+        if(pmap_has_word(pmap,prefix)):
+            return [prefix]
+        else:
+            return []
+    elif len(rack)==0:
+        return []
+    elif autocomplete(prefix,pmap)==[]:
+        return []
     else:
-        newRack=workableRack[1:]
-        newPrefix= prefix+workableRack[0]
-        goldenList=autocomplete(newPrefix,pmap)
-        playableWords+=goldenList
-        finalRack=str(newRack)
-        return scrabble_helper(newPrefix,finalRack,size-1,pmap)
+        answer=[]
+        workableRack=list(rack)
+        for y in range (len(workableRack)):
+            newPrefix= prefix+workableRack[y]
+            newRack=workableRack[1:]
+            
+            finalRack=""
+            for x in newRack:
+                finalRack+=x
+            answer+= scrabble_helper(newPrefix,finalRack,size-1,pmap)
+        return answer
 
 
 def match(template,pmap):
