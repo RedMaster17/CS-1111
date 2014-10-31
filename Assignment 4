@@ -254,7 +254,7 @@ def scrabble_helper(prefix,rack,size,pmap):
     
     
     
-    if size==0:
+    if size==1:
         if(pmap_has_word(pmap,prefix)):
             return [prefix]
         else:
@@ -276,6 +276,7 @@ def scrabble_helper(prefix,rack,size,pmap):
             answer+= scrabble_helper(newPrefix,finalRack,size-1,pmap)
         return answer
 
+
 def match(template,pmap):
     """Returns the list of all valid words that match the given template.
     
@@ -295,19 +296,7 @@ def match(template,pmap):
     Enforced Precondition: template is a string. pmap is a dict."""
     # We are not going to assert the preconditions here
     # We will let you do that in the helper function.
-    
-    '''len(prefix)==len(template)
-    count=0
-    for x in range(len(template)):
-        if prefix[x]!=template[x]:
-            count+=1
-        if count>1:
-            break
-    if pmap_has_word(pmap, prefix):
-        prefix is a word
-        '''
     return match_helper('',template,pmap)
-
 
 def match_helper(prefix,template,pmap):
     """Returns the list of all valid words that start with the given prefix, and
@@ -336,7 +325,7 @@ def match_helper(prefix,template,pmap):
     
     assert (prefix=="" or prefix.isalpha())
     assert (type(template)==str and type(pmap)==dict)
-    
+
     if autocomplete(prefix,pmap)==[]:
         return []
     elif len(template)==0:
@@ -344,25 +333,12 @@ def match_helper(prefix,template,pmap):
             return [prefix]
         else:
             return []
-    
-    '''else:
-        theRightAnswer=[]
-        workableTemplate=list(template)
-        pullALetter=workableTemplate.pop(0)
+    else:
         
-        if pullALetter.isalpha():
-            prefix+=pullALetter  
-        elif pullALetter=='?':
+        words= []
+        if template[0]=='?':
             for y in pmap[prefix]:
-                theRightAnswer+=autocomplete(prefix+y,pmap)
-        
-        theRealRightAnswer=word_list_by_size(theRightAnswer,len(prefix)+len(template)+1)
-        for b in range(len(theRealRightAnswer)):
-            for c in b[prefix.index("?")+1:]:
-                if c!=theRealRightAnswer[b]
-        
-        finalTemplate=""
-        for idk in range(len(workableTemplate)):
-            finalTemplate+=workableTemplate[idk]
-        
-        return theRealRightAnswer+match_helper(prefix,finalTemplate,pmap)'''
+                words+=match_helper(prefix +y, template[1:],pmap)
+            return words
+        else:
+            return match_helper(prefix +template[0],template[1:],pmap)
