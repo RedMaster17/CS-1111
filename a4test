@@ -217,9 +217,8 @@ def test_pmap_has_word():
 
 
 def test_autocomplete():
+    print 'Testing autocomplete'
     """Test search function autocomplete"""
-    print 'Testing function autocomplete'
-    a4.build_word_list('short.txt')
     shortWordList=a4.build_word_list('short.txt')
     testPMAP=dict()
     for word in shortWordList:
@@ -239,28 +238,20 @@ def test_autocomplete():
     assert_lists_equal( ['first'],a4.autocomplete('firs',testPMAP2))
     assert_lists_equal( [],a4.autocomplete('q',testPMAP2))
 
-def test_scrabble():
+def test_scrabble():    
+    print 'Testing scrabble'
     """Test search function scrabble"""
-    shortList=a4.build_word_list('short.txt')
-    shortPMAP=a4.word_list_to_pmap(shortList)
-    
-    print 'Testing function scrabble_helper'
-    assert_lists_equal(['to'],a4.scrabble_helper('t','heob',1,shortPMAP))
-    assert_lists_equal(['the'],a4.scrabble_helper('t','heob',2,shortPMAP))
-    
-    print 'Testing function scrabble'
-    assert_lists_equal(['be', 'to'],a4.scrabble('theob',1,shortPMAP))
+    shortWordList=a4.build_word_list('short.txt')
+    shortPmap = a4.word_list_to_pmap(shortWordList)
+    assert_lists_equal( ['be', 'to'],a4.scrabble('theob',2,shortPmap))
 
 
 def test_match():
     """Test search function match"""
-    shortList=a4.build_word_list('short.txt')
-    shortPMAP=a4.word_list_to_pmap(shortList)
-    
-    assert_lists_equal(['in', 'it'],a4.match_helper('i','?', shortPMAP))
-    assert_lists_equal(['ate', 'axe'],a4.match('a?e', shortPMAP))
-    assert_lists_equal(['in', 'it'],a4.match('i?', shortPMAP))
-    
+    print 'Testing Match'
+    shortWordList=a4.build_word_list('short.txt')
+    shortPmap = a4.word_list_to_pmap(shortWordList)
+    assert_lists_equal( ['in', 'it'],a4.match('i?',shortPmap))
 
 
 # Application Code
