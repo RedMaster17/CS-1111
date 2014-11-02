@@ -1,6 +1,6 @@
 # a4test.py
 # Reed Motulsky (rm693) and Ugonna Erinne (ue24)
-# DATE COMPLETED HERE
+# November 2nd, 2014
 """ Unit Test for Assignment A4"""
 import cornelltest
 import a4
@@ -239,19 +239,36 @@ def test_autocomplete():
     assert_lists_equal( [],a4.autocomplete('q',testPMAP2))
 
 def test_scrabble():    
-    print 'Testing scrabble'
     """Test search function scrabble"""
     shortWordList=a4.build_word_list('short.txt')
     shortPmap = a4.word_list_to_pmap(shortWordList)
+    averageWordList=a4.build_word_list('common.txt')
+    averagePmap = a4.word_list_to_pmap(averageWordList)
+    
+    print 'Testing scrabble'
     assert_lists_equal( ['be', 'to'],a4.scrabble('theob',2,shortPmap))
+    assert_lists_equal( ['at', 'it','to','we'],
+        a4.scrabble('aeioutw',2,averagePmap))
+    assert_lists_equal( ['out','two'],a4.scrabble('aeioutw',3,averagePmap))
+    assert_lists_equal( [],a4.scrabble('aeioutw',4,averagePmap))
+    assert_lists_equal( [],a4.scrabble('qwrtpls',2,averagePmap))
+    assert_lists_equal( [],a4.scrabble('',7,averagePmap))
 
 
 def test_match():
     """Test search function match"""
-    print 'Testing Match'
     shortWordList=a4.build_word_list('short.txt')
     shortPmap = a4.word_list_to_pmap(shortWordList)
+    averageWordList=a4.build_word_list('common.txt')
+    averagePmap = a4.word_list_to_pmap(averageWordList)
+    
+    print 'Testing Match'
     assert_lists_equal( ['in', 'it'],a4.match('i?',shortPmap))
+    assert_lists_equal( [],a4.match('f?t',averagePmap))
+    assert_lists_equal( ['well', 'what','when','will','with','work','want'],
+        a4.match('w???',averagePmap))
+    assert_lists_equal( ['I','a'],a4.match('?',averagePmap))
+    assert_lists_equal( ['because'],a4.match('???????',averagePmap))
 
 
 # Application Code
