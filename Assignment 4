@@ -210,17 +210,13 @@ def scrabble(rack,size,pmap):
     We only enforce that pmap is a dict."""
     # We are not going to assert the preconditions here
     # We will let you do that in the helper function.
-    
-    racklist= list(rack)
-    goldenList =[]
-    for x in racklist:
-        print x
-        goldenList+=scrabble_helper(x,rack,size,pmap)
-    for y in goldenList:
-        if goldenList.count(y)>1:
-            goldenList.remove(y)
-    return goldenList
 
+    goldenList = scrabble_helper('',rack,size,pmap)
+    finalList = []
+    for y in goldenList:
+        if y not in finalList:
+            finalList+= [y]
+    return finalList
 
 def scrabble_helper(prefix,rack,size,pmap):
     """"Returns the list of all valid words extending prefix that you can form from
@@ -258,7 +254,7 @@ def scrabble_helper(prefix,rack,size,pmap):
     
     
     
-    if size==1:
+    if size==0:
         if(pmap_has_word(pmap,prefix)):
             return [prefix]
         else:
@@ -334,12 +330,10 @@ def match_helper(prefix,template,pmap):
         return []
     elif len(template)==0:
         if pmap_has_word(pmap,prefix):
-            print prefix
             return [prefix]
         else:
             return []
     else:
-        
         words= []
         if template[0]=='?':
             for y in pmap[prefix]:
@@ -347,6 +341,4 @@ def match_helper(prefix,template,pmap):
                     words+=match_helper(prefix +y, template[1:],pmap)
             return words
         else:
-            print len(template)
             return match_helper(prefix +template[0],template[1:],pmap)
-    
