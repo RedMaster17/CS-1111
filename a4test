@@ -252,7 +252,7 @@ def test_scrabble():
     assert_lists_equal( ['out','two'],a4.scrabble('aeioutw',3,averagePmap))
     assert_lists_equal( [],a4.scrabble('aeioutw',4,averagePmap))
     assert_lists_equal( [],a4.scrabble('qwrtpls',2,averagePmap))
-    assert_lists_equal( [],a4.scrabble('',7,averagePmap))
+    assert_lists_equal( ['because'],a4.scrabble('because',7,averagePmap))
 
 
 def test_match():
