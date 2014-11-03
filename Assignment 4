@@ -1,6 +1,6 @@
 # a4.py
 # Reed Motulsky (rm693) and Ugonna Erinne (ue24)
-# November 2nd, 2014
+# DATE COMPLETED HERE
 """ Functions for Assignment A4"""
 
 
@@ -19,16 +19,12 @@ def build_word_list(filename):
     
     Enforced Precondition: filename is a string"""
     assert (type(filename)==str)
-    wordBank=open(filename) 
+    wordBank=open(filename)
     finalWordBank=[]
     for line in wordBank:
         finalWordBank.append(str.split(line,"\n")[0])
-        '''returns the first letter of the array formed by splitting each line
-        in the text file'''
     return finalWordBank
-    wordBank.close()
-    #closes the file to prevent file corruption
-
+    finalWordBank.close()
 
 def word_list_by_size(words, size):
     """Returns the elements of words that have length size
@@ -69,6 +65,7 @@ def word_list_extend(words, prefix):
 
 
 
+
 # Task 2: Prefix Maps
 
 def pmap_add_word(pmap,word):
@@ -96,20 +93,14 @@ def pmap_add_word(pmap,word):
     assert (type(pmap)==dict and word.isalpha())
     
     for x in range(len(word)):
-        if word[:x] in pmap: #if the prefix already exist
+        if word[:x] in pmap:
             if word[x] not in pmap[word[:x]]:
-                #if the letter is not in the list for the prefix
-                pmap[word[:x]]+= list(word[x]) 
+                pmap[word[:x]]+= list(word[x])
         else :
             pmap[word[:x]]=list(word[x])
     try :
-        '''At the end of the loop, we need to add the empty string to the pmap
-        in case another word has the word we are currently adding in the
-        future as a stem'''
         pmap[word]+=['']
     except:
-        '''In the case that the key does not already exist, assign it the list
-        of only the empty string'''
         pmap[word]=['']
 
 
@@ -155,7 +146,8 @@ def pmap_has_word(pmap,word):
     Enforced Precondition: pmap is a dict. word is a string."""
     assert (type(pmap)==dict and type(word)==str)
     
-    return word in pmap_to_word_list(pmap)
+    a = pmap_to_word_list(pmap)
+    return word in a
 
 
 
@@ -189,7 +181,6 @@ def autocomplete(prefix, pmap):
     
     answer = []
     try:
-        #Assuming that the prefix is a key in the pmap
         for x in pmap[prefix]:
             if x=='':
                 answer.append(prefix)
@@ -197,7 +188,6 @@ def autocomplete(prefix, pmap):
                 answer+=list(autocomplete(prefix+x, pmap))
         return answer
     except:
-        #in the case that the prefix is not a key in the pmap
         return answer
 
 
@@ -224,7 +214,11 @@ def scrabble(rack,size,pmap):
     racklist= list(rack)
     goldenList =[]
     for x in racklist:
+        print x
         goldenList+=scrabble_helper(x,rack,size,pmap)
+    for y in goldenList:
+        if goldenList.count(y)>1:
+            goldenList.remove(y)
     return goldenList
 
 
@@ -262,6 +256,8 @@ def scrabble_helper(prefix,rack,size,pmap):
     assert (size>=0)
     assert (type(pmap)==dict)
     
+    
+    
     if size==1:
         if(pmap_has_word(pmap,prefix)):
             return [prefix]
@@ -275,15 +271,13 @@ def scrabble_helper(prefix,rack,size,pmap):
         answer=[]
         workableRack=list(rack)
         for y in range (len(workableRack)):
-            newPrefix=prefix+workableRack[y]
-            #Adds a letter from the rack to the prefix
+            newPrefix= prefix+workableRack[y]
             newRack=workableRack[1:]
-            #Removes the letter from the rack
+            
             finalRack=""
             for x in newRack:
                 finalRack+=x
-            #This for-loop is necessary to convert the rack back to a string
-            answer+=scrabble_helper(newPrefix,finalRack,size-1,pmap)
+            answer+= scrabble_helper(newPrefix,finalRack,size-1,pmap)
         return answer
 
 
@@ -306,8 +300,7 @@ def match(template,pmap):
     Enforced Precondition: template is a string. pmap is a dict."""
     # We are not going to assert the preconditions here
     # We will let you do that in the helper function.
-    return word_list_by_size(match_helper('',template,pmap),len(template))
-
+    return match_helper('',template,pmap)
 
 def match_helper(prefix,template,pmap):
     """Returns the list of all valid words that start with the given prefix, and
@@ -341,14 +334,19 @@ def match_helper(prefix,template,pmap):
         return []
     elif len(template)==0:
         if pmap_has_word(pmap,prefix):
+            print prefix
             return [prefix]
         else:
             return []
     else:
+        
         words= []
         if template[0]=='?':
             for y in pmap[prefix]:
-                words+=match_helper(prefix+y,template[1:],pmap)
+                if(y!=''):
+                    words+=match_helper(prefix +y, template[1:],pmap)
             return words
         else:
-            return match_helper(prefix+template[0],template[1:],pmap)
+            print len(template)
+            return match_helper(prefix +template[0],template[1:],pmap)
+    
