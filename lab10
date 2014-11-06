@@ -1,0 +1,180 @@
+# lab10.py
+# Ugonna Erinne
+# November 5th, 2014
+"""Module for to show off advanced class design
+
+This is the ONLY module in this assignment that you should need
+to modify.  You might want to look at shapes.py to see the
+base class Parallelogram, but that is it."""
+import colormodel
+import math
+from shapes import *
+
+
+# CLASSES
+class Rhombus(Parallelogram):
+    """Instances are a rhombus, 
+    
+    A which is a type of parallelogram with horizontal
+    length l1 (and other length l1) whose bottom line starts d units to the
+    right of the x-coordinate of the leftmost part of the rhombus, unless d < 0,
+    in which case the top line starts d units to the right of the leftmost part
+    of the rhombus.
+    
+    INSTANCE ATTRIBUTES (all inherited from Parallelogram):
+        x:   x-coordinate of bottom left corner [int or float]
+        y:   y-coordinate of bottom left corner [int or float]
+        _l1: Length of horizontal side [int or float > 0, == _l2]
+        _l2: Length of OTHER side [int or float > 0, , == _l1]
+        _d:  Leaning factor [int or float >= 0]
+    
+    The three hidden instance attributes have read-only
+    properties (e.g. x = self.l1 is okay, but self.l1 = x is not).
+    """
+    # MAKE A GETTER AND SETTER FOR SIDE HERE
+    def getSide(self):
+        '''Returns: Length of a side'''
+        return self._l1
+    
+    
+    def setSide(self,value):
+        assert type(value) in [int,float]
+        self._l1=value
+        self._l2=value
+    
+    def __init__(self, xp, yp, lp1, dp):
+        """Initializer: make a rhombus at (xp, yp) 
+        
+        The rhombus has side length lp1 and leaning factor dp
+        
+        Precondition: xp, yp, lp1, and dp are all numbers (floats or ints).
+        lp1 may not be negative"""
+        
+        assert type(xp) in [int,float]
+        assert type(yp) in [int,float]
+        assert type(lp1) in [int,float] and lp1>=0
+        assert type(dp) in [int,float]
+        
+        Parallelogram.__init__(self,xp,yp,lp1,lp1,dp)
+
+
+    def __str__(self):
+        """Returns: description of this rhombus"""
+        return ('rhombus at ' + Shape.__str__(self) + 
+                ', side ' + str(self.getSide()) + 
+                ', distance ' + str(self.getD()) + ' from ' + str(self.getX()))
+
+
+class Square(Rhombus):
+    """Instance is a square (Rhombus with leaning factor 0)
+    
+    INSTANCE ATTRIBUTES (all inherited from Parallelogram):
+        x:   x-coordinate of bottom left corner [int or float]
+        y:   y-coordinate of bottom left corner [int or float]
+        _l1: Length of horizontal side [int or float > 0, == _l2]
+        _l2: Length of OTHER side [int or float > 0, , == _l1]
+        _d:  Leaning factor [always 0]
+
+    The three hidden instance attributes have read-only
+    properties (e.g. x = self.l1 is okay, but self.l1 = x is not).
+    """
+
+    def __init__(self, xp, yp, l):
+        """Intializer: make a square at (xp, yp) of side length l
+        
+        Precondition: xp, yp, and l are numbers (floats or ints).
+        l may not be negative"""
+        assert type(xp) in [int,float]
+        assert type(yp) in [int,float]
+        assert type(l) in [int,float] and l>=0
+        # DO NOT ASSIGN _l1, _l2, _d DIRECTLY. USE HELPER INITIALIZER
+        Rhombus.__init__(self,xp,yp,l,0)
+
+    
+    def area(self):
+        """Returns: the area of this square"""
+        return self.getSide()**2
+    
+    def __str__(self):
+        """Returns: description of this square
+        
+        See instructions for details"""
+        return ('square at ' + Shape.__str__(self) + 
+                ', side ' + str(self.getSide()) + 
+                ', area ' + str(self.area()))
+
+
+# DRAWING FUNCTION (Used by drawapp)
+def draw_shapes(panel):
+    """Draws shapes on the given panel.
+    
+    This function is called by shapeApp.py to draw the figure.
+    
+    Precondition: panel is a Panel object (shapeApp.py)"""
+
+    # the "1st" parallelogram is the top right one.
+    h = 30   # length of horizontal side of 1st parallelogram
+    v = 50   # length of other side of 1st parallelogram
+    d1 = 20  # distance from (x,y) to 1st parallelogram's bottom horizontal line
+    d2 = 10  # distance from (x,y) to 1st rhombus's bottom horizontal line
+    x = 125  # Center x-coordinate of the shape.
+    y = 175  # of the top-left point of the 1st parallelogram if d is 0
+    needANumber=60
+    needAnotherNumber=20
+    
+    # vertical distance to top of parallelogram
+    vert1 = int(round(math.sqrt(v*v - d1*d1)))
+    # vertical distance to top of rhombus
+    vert2 = int(round(math.sqrt(h*h - d2*d2)))
+    
+    print '\n\n' # Some blank lines
+    
+    # Drawing commands
+    s1 = Parallelogram(x, y, h, v, d1)
+    s1.setColor(colormodel.RED)
+    panel.draw(s1)
+    print str(s1)
+    
+    s2 = Parallelogram(x-d1-h, y, h, v, -d1)
+    s2.setColor(colormodel.RED)
+    panel.draw(s2)
+    print str(s2)
+     
+    s3 = Parallelogram(x, y-vert1, h, v, -d1)
+    s3.setColor(colormodel.RED)
+    panel.draw(s3)
+    print str(s3)
+     
+    s4 = Parallelogram(x-d1-h, y-vert1, h, v, d1)
+    s4.setColor(colormodel.RED)
+    panel.draw(s4)
+    print str(s4)
+   
+    s5 = Square(x-h, y-vert1-2*h, 2*h)
+    s5.setColor(colormodel.GREEN)
+    panel.draw(s5)
+    print str(s5)
+     
+    s6 = Rhombus(x, y-vert1-2*h-vert2, h, d2)
+    s6.setColor(colormodel.BLUE)
+    panel.draw(s6)
+    print str(s6)
+     
+    s7 = Rhombus(x-h-d2, y-vert1-2*h-vert2, h, -d2)
+    s7.setColor(colormodel.BLUE)
+    panel.draw(s7)
+    print str(s7)
+    
+    # REPLACE ME!
+    s8 = Parallelogram(x+h,y-vert1-needAnotherNumber,needANumber,needAnotherNumber,0)
+    s8.setColor(colormodel.GREEN)
+    panel.draw(s8)
+    print str(s8)
+        
+    # REPLACE ME!
+    s9 = Parallelogram((x-h)-needANumber,y-vert1-needAnotherNumber,needANumber,needAnotherNumber,0)
+    s9.setColor(colormodel.GREEN)
+    panel.draw(s9)
+    print str(s9)
+        
+    print '\n\n' # Some blank lines
