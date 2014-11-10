@@ -1,0 +1,31 @@
+def problem8(value):
+    #Return: The biggest product of 13 adjacent digits in a very large number
+    workableList=[]
+    while value>0:
+        workableList.append(value%10)
+        value/=0
+    progressionCounter=0
+    biggestProduct=0
+    while progressionCounter+13<len(workableList):
+        betterList=workableList[progressionCounter:progressionCounter+13]
+        candidate=1
+        for x in betterList:
+            if x==0:
+                break
+                progressionCounter+=(betterList.index(0)+1)
+            elif x==1:
+                continue
+            else:
+                candidate*=x
+            
+        if candidate>biggestProduct:
+            biggestProduct=candidate
+
+
+def problem13(value):
+    #Return: the sum of 100 50-digit numbers
+    workableList=[]
+    while value>0:
+        workableList.append(value%(10**50))
+        value/=(10**50)
+    return list.sum(workableList)
