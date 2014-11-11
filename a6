@@ -191,16 +191,19 @@ class Cluster(object):
         Pre: ds is an instance of a subclass of Dataset.
              centroid is a list of ds.getDimension() numbers.
         """
-        # IMPLEMENT ME
-        pass
+        assert (isinstance(ds,Dataset))
+        assert (is_point(centroid) and len(centroid)==ds.getDimension())
+        
+        self._centroid=centroid[:]
+
 
     def getCentroid(self):
         """Returns: the centroid of this cluster.
         
         This getter method is to protect access to the centroid.
         """
-        # IMPLEMENT ME
-        pass
+       
+       return self._centroid
     
     def getIndices(self):
         """Returns: the indices of points in this cluster
@@ -208,8 +211,8 @@ class Cluster(object):
         This method returns the attribute _indices directly.  Any changes
         made to this list will modify the cluster.
         """
-        # IMPLEMENT ME
-        pass
+        
+        return self._indices
     
     def addIndex(self, index):
         """Add the given dataset index to this cluster.
