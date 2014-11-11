@@ -1,6 +1,6 @@
 # lab11.py
-# YOUR NAME(S) AND NETID(S) HERE
-# DATE COMPLETED HERE
+# Ugonna Erinne (ue24)
+# November 11th, 2014
 """Loop functions for lab 11"""
 from math import *
 
@@ -98,8 +98,8 @@ def exp(x,err=1e-6):
     
     # IMPLEMENT A WHILE LOOP HERE
     while abs(((x**n)/float(factorial(n)))*(x/float((n+1))))>=err:
-        term=(x**n)/float(factorial(n))
         approx+=term
+        term=(x**n)/float(factorial(n))
         n+=1
     # END WHILE LOOP
     
