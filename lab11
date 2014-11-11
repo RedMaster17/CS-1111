@@ -97,10 +97,9 @@ def exp(x,err=1e-6):
     n = 0         # term 1 corresponds to (x ** 0)/0!
     
     # IMPLEMENT A WHILE LOOP HERE
-    while abs(((x**n)/factorial(n))*(x/(n+1)))>=err:
-        term=(x**n)/factorial(n)
+    while abs(((x**n)/float(factorial(n)))*(x/float((n+1))))>=err:
+        term=(x**n)/float(factorial(n))
         approx+=term
-        print approx
         n+=1
     # END WHILE LOOP
     
