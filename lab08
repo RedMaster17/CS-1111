@@ -1,0 +1,288 @@
+# lab08.py
+# Ugonna Erinne (ue24)
+# THE DATE COMPLETED HERE
+"""Lab *: Recursive Functions"""
+
+# IMPLEMENT ALL OF THESE FUNCTIONS
+def numberof(thelist, v):
+    """Returns: number of times v occurs in thelist.
+    
+    Precondition: thelist is a list of ints
+                  v is an int"""
+    assert (type(thelist)==list and type(v)==int)
+    for x in thelist:
+        assert (type(x)==int)
+    
+    if len(thelist)==0: return 0
+    elif len(thelist)==1:
+        if v in thelist:
+            return 1
+        return 0
+    else:
+        if thelist[0]==v:
+            return 1+numberof(thelist[1:],v)
+        return 0+numberof(thelist[1:],v)
+        
+
+def number_not(thelist, v):
+    """Returns: number of elements in thelist that are NOT v.
+    
+    Precondition: thelist is a list of ints
+                  v is an int"""
+    assert (type(thelist)==list and type(v)==int)
+    for x in thelist:
+        assert (type(x)==int)
+    
+    if len(thelist)==0: return 0
+    elif len(thelist)==1:
+        if v in thelist:
+            return 0
+        return 1
+    else:
+        if thelist[0]==v:
+            return 0+number_not(thelist[1:],v)
+        return 1+number_not(thelist[1:],v)
+
+
+def replace(thelist,a,b):
+    """Returns: a COPY of thelist but with all occurrences of a replaced by b. 
+    
+        Example: replace([1,2,3,1], 1, 4) = [4,2,3,4].
+        
+    Precondition: thelist is a list of ints
+                  a and b are ints"""
+    assert (type(thelist)==list and type(a)==int and type(b)==int)
+    for x in thelist: assert (type(x)==int)
+    
+    if len(thelist)==0: return []
+    elif len(thelist)==1:
+        if a in thelist:
+            return [b]
+        return thelist[:]
+    else:
+        start=thelist[0]
+        if start==a:
+            start=b
+        return [start]+replace(thelist[1:],a,b) 
+    
+
+def remove_dups(thelist):
+    """Returns: a COPY of thelist with adjacent duplicates removed.
+    
+        Example: for thelist = [1,2,2,3,3,3,4,5,1,1,1],
+        the answer is [1,2,3,4,5,1]
+    
+    Precondition: thelist is a list of ints"""
+    assert (type(thelist)==list)
+    for x in thelist:
+        assert (type(x)==int)
+    
+    if len(thelist)==0: return []
+    elif len(thelist)==1: return thelist[:]
+    elif len(thelist)==2:
+        if thelist[0]!=thelist[1]: return thelist[:]
+        return thelist[0:1]
+    else:
+        n1=thelist[0]
+        n2=thelist[1]
+        if n1!=n2:
+            return [n1]+remove_dups(thelist[1:])
+        return remove_dups(thelist[1:])
+
+
+
+# OPTIONAL EXERCISES
+
+def remove_first(thelist, v):
+    """Returns: a COPY of thelist but with the FIRST occurrence of v
+    removed (if present).
+
+    Note: This can be done easily using index. Don't do that.
+    Do it recursively.
+    
+    Precondition: thelist is a list of ints
+                  v is an int"""
+    
+    assert (type(thelist)==list and type(v)==int)
+    for x in thelist:
+        assert (type(x)==int)
+    
+    if v not in thelist:
+        return thelist[:]
+    elif len(thelist)==0:
+        return []
+    elif len(thelist)==1:
+        if v in thelist:
+            return []
+        return thelist[:]
+    else:
+        if thelist[0]!=v:
+            return [thelist[0]]+remove_first(thelist[1:],v)
+        return thelist[1:]
+    
+    
+
+
+def reverse1(thelist):
+    """Returns: a COPY of thelist that is the reverse of the list.
+    
+        Example: the reverse of [1,2,3] is [3,2,1]
+    
+    Do not use the method reverse().  That alters the list thelist.
+    Instead, implement this function with the following idea:
+    The reverse of thelist with at least one element is the
+    reverse of thelist[1:] catenated with (a list with the element)
+    thelist[0].
+
+    Precondition: thelist is a list of ints"""
+    assert (type(thelist)==list)
+    for x in thelist:
+        assert (type(x)==int)
+        
+    if len(thelist)==0:
+        return []
+    else:
+        return reverse1(thelist[1:])+[thelist[0]]
+
+
+def reverse2(thelist):
+    """Returns: a COPY of thelist that is the reverse of the list.
+    
+        Example: the reverse of [1,2,3] is [3,2,1]
+    
+    Do not use the method reverse().  That alters the list thelist.
+    Instead, implement this method with the following idea:
+    To reverse a list thelist with at least two elements, switch
+    the first and last ones and reverse the middle.
+
+    Precondition: thelist is a list of ints"""
+    assert (type(thelist)==list)
+    for x in thelist:
+        assert (type(x)==int)
+    
+    if len(thelist)==0:
+        return []
+    elif len(thelist)==1:
+        return thelist[:]
+    else:
+        return [thelist[len(thelist)-1]]+reverse2(thelist[1:len(thelist)-1])+[thelist[0]]
+
+
+def sum_list(thelist):
+    """Returns: the sum of the integers in list l.
+    
+        Example: sum_list([34]) is 34
+        Example: sum_list([7,34,1,2,2]) is 46
+    
+    Precondition: thelist is a list of ints"""
+    assert (type(thelist)==list)
+    for x in thelist:
+        assert (type(x)==int)
+    
+    if len(thelist)==0:
+        return 0
+    elif len(thelist)==1:
+        return thelist[0]
+    else:
+        return thelist[0]+sum_list(thelist[1:])
+
+
+def sum_to(n):
+    """Returns: sum of numbers 1 to n.
+    
+        Example: sum_to(3) = 1+2+3 = 6, 
+        Example: sum_to(5) = 1+2+3+4+5 = 15
+    
+    Precondition: n >= 1 is an int."""
+    assert (type(n)==int and n>=1)
+    
+    if n==1:
+        return 1
+    else:
+        return n+sum_to(n-1)
+
+
+def num_digits(n):
+    """Yields: number of the digits in the decimal representation of n.
+
+        Example: num_digits(0) = 1
+        Example: num_digits(3) = 1
+        Example: num_digits(34) = 2
+        Example: num_digits(1356) = 4
+    
+    Precondition: n >= 0 is an int"""
+    assert (type(n)==int and n>=0)
+    
+    if n<10:
+        return 1
+    else:
+        return 1+num_digits(n/10)
+
+    
+def sum_digits(n):
+    """Returns: sum of the digits in the decimal representation of n.
+    
+        Example: sum_digits(0) = 0
+        Example: sum_digits(3) = 3
+        Example: sum_digits(34) = 7
+        Example: sum_digits(345) = 12
+    
+    Precondition: n >= 0 is an int."""
+    assert (type(n)==int and n>=0)
+    
+    if n<10:
+        return n
+    else:
+        savedDigit=n%10
+        return savedDigit+sum_digits(n/10)
+
+
+def number2(n):
+    """Returns: the number of 2's in the decimal representation of n.
+    
+        Example: number2(0) = 0
+        Example: number2(2) = 1
+        Example: number2(234252) = 3
+        
+    Precondition: n >= 0 is an int."""
+    assert (type(n)==int and n>=0)
+    
+    if n<10:
+        if n==2:
+            return 1
+        return 0
+    else:
+        if n%10==2:
+            return 1+number2(n/10)
+        return number2(n/10)
+
+def into(n, c):
+    """Returns: The number of times that c divides n,
+    
+        Example: into(5,3) = 0 because 3 does not divide 5.
+        Example: into(3*3*3*3*7,3) = 4.
+    
+    Precondition: n >= 1 and c > 1 are ints."""
+    assert (type(n)==int and n>=1)
+    assert (type(c)==int and c>1)
+    
+    if n%c!=0:
+        return 0
+    return 1+into(n/c,c)
+    
+    
+def exp(b, c):
+    """Returns: b ** c, i.e. b multiplied by itself c times.
+    
+    Also called b "to the power" c.
+    Hints: b ** 0 = 1.
+    if c is even, b**c == (b*b) ** (c/2)
+    if c > 0, b**c =  b * (b ** (c-1)).
+    
+    Precondition: c >= 0 is an int"""
+    assert (type(c)==int and c>=0)
+    
+    if c==0: return 1
+    if c==1:
+        return b
+    return b*exp(b,c-1)
