@@ -282,18 +282,27 @@ class Cluster(object):
     
         If there are no points in the cluster, the centroid. does not change.
         """
-        workableList=[]
-        for x in range(self._dataset.getSize()):
-            workableList.append(self._dataset.getPoint(x))
-        answerList=[]
-        for y in range(len(workableList)):
-            coordinateCandidate=0.0
-            for z in range(self._dataset.getDimension()):
-                coordinateCandidate+=workableList[y][z]
-            coordinateCandidate/=len(workableList)
-            answerList.append(coordinateCandidate)
-        return numpy.allclose(answerList,self._centroid)
-    
+        if len(self._indices)==0:
+            return True
+        else:
+            isSame = False
+            workableList=[]
+            for x in self._indices:
+                workableList.append(self._dataset.getPoint(x))
+            answerList=[]
+            for y in range(self._dataset.getDimension()):
+                coordinateCandidate=0.0
+                for z in range(len(workableList)):
+                    coordinateCandidate+=workableList[z][y]
+                coordinateCandidate/=len(workableList)
+                answerList.append(coordinateCandidate)
+            
+            if numpy.allclose(answerList,self._centroid):
+                isSame = True
+            else:
+                self._centroid=answerList
+            return isSame
+
     
     # PROVIDED METHODS: Do not modify!
     def __str__(self):
@@ -326,9 +335,13 @@ class ClusterGroup(object):
              k is an int, 0 < k <= ds.getSize().
              seed_inds is None, or a list of k valid indices into ds.
         """
-        # IMPLEMENT ME
-        pass
-    
+        assert (isinstance(ds,Dataset))
+        assert (isinstance(k,int) and 0<k and k<=ds.getSize())
+        assert (is_list_of_points(k))
+        
+        self._dataset=ds
+        while k>0:
+            
     def getClusters(self):
         """Return: The list of clusters in this object.
         
