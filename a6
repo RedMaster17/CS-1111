@@ -144,7 +144,6 @@ class Dataset(object):
         """
         assert (is_point(point) and len(point)==self._dimension)
         
-        aGoodPoint=point
         self.getContents().append(point[:])
 
     
@@ -194,6 +193,8 @@ class Cluster(object):
         assert (isinstance(ds,Dataset))
         assert (is_point(centroid) and len(centroid)==ds.getDimension())
         
+        self._dataset=ds
+        self._indices=[]
         self._centroid=centroid[:]
 
 
@@ -223,14 +224,18 @@ class Cluster(object):
         Precondition: index is a valid index into this cluster's dataset.
         That is, index is an int in the range 0.._dataset.getSize().
         """
-        # IMPLEMENT ME
-        pass
-    
+        assert (isinstance(index,int) and 0<=index and index<=self._dataset.getSize())
+        
+        if index not in self.getIndices():
+            self.getIndices.append(index)
+
+
     def clear(self):
         """Remove all points from this cluster, but leave the centroid unchanged.
         """
-        # IMPLEMENT ME
-        pass
+        
+        self._indices=[]
+
     
     def getContents(self):
         """Return: a new list containing copies of the points in this cluster.
@@ -238,8 +243,12 @@ class Cluster(object):
         The result is a list of list of numbers.  It has to be computed from
         the indices.
         """
-        # IMPLEMENT ME
-        pass
+        
+        answer=[]
+        for x in self._indices:
+            answer.append(self._ds[x[:]])
+        return answer
+
     
     # Part B
     def distance(self, point):
@@ -248,8 +257,12 @@ class Cluster(object):
         Pre: point is a list of numbers (int or float)
              len(point) = _ds.getDimension()
         """
-        # IMPLEMENT ME
-        pass
+        assert (is_point(point) and len(point)==self._ds.getDimension())
+        
+        answerSquared=0.0
+        for x in range(self._ds.getDimension()):
+            answerSquared+=((point[x]-self.getCentroid()[x])**2)
+        return math.sqrt(answerSquared)
     
     def updateCentroid(self):
         """Returns: Trues if the centroid remains the same after recomputation,
@@ -266,9 +279,17 @@ class Cluster(object):
     
         If there are no points in the cluster, the centroid. does not change.
         """
-        # IMPLEMENT ME
-        pass
-    
+        workableList=[]
+        for x in range(self._ds.getSize()):
+            workableList.append(self._ds.getPoint(x))
+        answwerList=[]
+        for y in range(len(workableList)):
+            coordinateCandidate=0.0
+            for z in range(self._ds.getDimension()):
+                coordinateCandidate+=workableList[y[z]]
+            coordinateCandidate/=len(workableList)
+            answerList.append(coordinateCandidate)
+        return numpy.ma.allclose(answerList,self.getCentroid())
     # PROVIDED METHODS: Do not modify!
     def __str__(self):
         """Returns: String representation of the centroid of this cluster."""
