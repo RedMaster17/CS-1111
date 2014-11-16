@@ -73,7 +73,7 @@ class Dataset(object):
         then contents if not empty and the number of columns of contents is 
         equal to dim.
         """
-        assert (type(dim)==int and dim>0)
+        assert (isinstance(dim,int) and dim>0)
         assert (is_list_of_points(contents))
         if contents!=None:
             assert len(contents)!=0
@@ -126,7 +126,7 @@ class Dataset(object):
         Precondition: i is an int that refers to a valid position in the data
         set (e.g. i is between 0 and getSize()).
         """
-        assert (type(i)==int and 0<=i and i<=self.getSize())
+        assert (isinstance(i,int) and 0<=i and i<=self.getSize())
         
         answer=[]
         for x in self._contents[i]:
@@ -337,19 +337,31 @@ class ClusterGroup(object):
         """
         assert (isinstance(ds,Dataset))
         assert (isinstance(k,int) and 0<k and k<=ds.getSize())
-        assert (is_list_of_points(k))
+        assert (is_list_of_valid_ints(seed_inds,ds))
         
         self._dataset=ds
-        while k>0:
-            
+        clusterList=[]
+        centroidList=random.sample(self._dataset.getContents(),k)
+        if seed_inds==None:
+            print "if"
+            for z in range(len(centroidList)):
+                newC=Cluster(self._dataset,centroidList[z])
+                clusterList.append(newC)
+        else:
+            print "else"
+            for x in seed_inds:
+                newC=Cluster(self._dataset,self._dataset.getContents()[x])
+                clusterList.append(newC)
+        self._clusters=clusterList
+
+
     def getClusters(self):
         """Return: The list of clusters in this object.
         
         This method returns the attribute _clusters directly.  Any changes
         made to this list will modify the set of clusters.
         """ 
-        # IMPLEMENT ME
-        pass
+        return self._clusters
 
     # Part B
     def _nearest_cluster(self, point):
@@ -365,18 +377,29 @@ class ClusterGroup(object):
         Pre: point is a list of numbers (int or float),
              len(point) = self._dataset.getDimension().
         """
-        # IMPLEMENT ME
-        pass
-    
+        assert (is_point(point))
+        assert (len(point)==self._dataset.getDimension())
+        
+        closest=self._clusters[0]
+        for x in range(len(self._clusters)):
+            if self._clusters[x].distance(point)<closest.distance(point):
+                closest=self._clusters[x]
+        return closest
+
+
     def _partition(self):
         """Repartition the dataset so each point is in exactly one Cluster.
         """
         # First, clear each cluster of its points.  Then, for each point in the
         # dataset, find the nearest cluster and add the point to that cluster.
         
-        # IMPLEMENT ME
-        pass
-    
+        for x in self._clusters:
+            x.clear()
+        for y in self._dataset.getContents():
+            closestCluster=self._nearest_cluster(y)
+            closestCluster.addIndex(self._dataset.getContents().index(y))
+
+
     # Part C
     def _update(self):
         """Return:True if all centroids are unchanged after an update; False otherwise.
@@ -384,8 +407,12 @@ class ClusterGroup(object):
         This method first updates the centroids of all clusters'.  When it is done, it
         checks whether any of them have changed. It then returns the appropriate value.
         """
-        # IMPLEMENT ME
-        pass
+        answer=True
+        for y in self._clusters:
+            if y.updateCentroid()==False:
+                answer = False
+        return answer
+        
     
     def step(self):
         """Return: True if the algorithm converges after one step; False otherwise.
@@ -393,9 +420,9 @@ class ClusterGroup(object):
         This method performs one cycle of the k-means algorithm. It then checks if
         the algorithm has converged and returns the appropriate value.
         """
-        # In a cycle, we partition the points and then update the means.
-        # IMPLEMENT ME
-        pass
+        self._partition()
+        return self._update()
+        
     
     # Part D
     def run(self, maxstep):
@@ -406,8 +433,9 @@ class ClusterGroup(object):
         # converges.  Stop after maxstep iterations even if the algorithm has not
         # converged.
         
-        # IMPLEMENT ME
-        pass
+        progression=maxstep
+        while self.step()==False and progression>0:
+            progression-=1
     
     # PROVIDED METHODS: Do not modify!
     def __str__(self):
