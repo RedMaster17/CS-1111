@@ -33,6 +33,21 @@ def is_list_of_points(anotherList):
         return True
 
 
+def is_list_of_valid_ints(aThirdList,ds):
+    assert (isinstance(ds,Dataset))
+    if aThirdList==None:
+        return True
+    elif not isinstance(aThirdList,list):
+        return False
+    else:
+        for x in aThirdList:
+            if not (isinstance(x,int)):
+                return False
+            elif not (0<=x and x<ds.getSize()):
+                return False
+        return True
+
+
 # CLASSES
 class Dataset(object):
     """Instance is a dataset for k-means clustering.
@@ -343,12 +358,10 @@ class ClusterGroup(object):
         clusterList=[]
         centroidList=random.sample(self._dataset.getContents(),k)
         if seed_inds==None:
-            print "if"
             for z in range(len(centroidList)):
                 newC=Cluster(self._dataset,centroidList[z])
                 clusterList.append(newC)
         else:
-            print "else"
             for x in seed_inds:
                 newC=Cluster(self._dataset,self._dataset.getContents()[x])
                 clusterList.append(newC)
@@ -432,7 +445,8 @@ class ClusterGroup(object):
         # Call step repeatedly, up to maxstep times, until the algorithm
         # converges.  Stop after maxstep iterations even if the algorithm has not
         # converged.
-        
+        #Precondition: maxstep is an int, maxstep >= 0
+        assert (isinstance(maxstep,int) and maxstep>=0)
         progression=maxstep
         while self.step()==False and progression>0:
             progression-=1
