@@ -1,0 +1,123 @@
+# lab12.py
+# Ugonna Erinne (ue24)
+# November 19th, 2014
+"""Loop functions (with invariants) for lab 12"""
+
+import math
+
+def isprime(p):
+    """Returns: True if p a prime, False otherwise
+    
+    i.e. p is at least 2 and is divisible by only 1 and itself
+    
+    Precondition: p is an int"""
+    assert type(p) == int, `p`+' is not an int'
+    
+    if p < 2:
+        return True   # CHANGE THIS EXPRESSION, IF NECESSARY
+    else:
+    # Return False if some integer in 2..p-1 divides p
+        k = 2               # CHANGE THIS EXPRESSION, IF NECESSARY
+        
+        # inv: p is not divisible by integers in 2..k-1
+        while k < p:
+            if p%k==0:       # CHANGE THIS EXPRESSION
+                return False
+            
+            # Increment to next position
+            k= k+1
+        
+        # no integer in 2..p-1 divides p
+        return True        # CHANGE THIS EXPRESSION, IF NECESSARY
+
+
+def count_letter(c, s):
+    """Returns: number of times character c appears in string s
+    
+    Precondition: s, c are strings. len(c) == 1"""
+    assert type(s) == str, `s`+' is not a string'
+    assert type(c) == str and len(c) == 1, `c`+' is not a character'
+    
+    # INITIALIZE LOOP VARIABLES HERE
+    x=0
+    k=0
+    # inv: x is number of times c appears in s[0..k-1]
+    if len(s)==0:
+        return 0
+    elif len(s)==1:
+        if c in s:
+            return 1
+        return 0
+    else:
+        while k<len(s):             # CHANGE THIS EXPRESSION
+            if s[k]==c:           # CHANGE THIS EXPRESSION
+                x = x+1
+            
+            # Increment to next position
+            k = k + 1
+        
+        return x # CHANGE THIS, IF NECESSARY
+
+
+
+# OPTIONAL FUNCTIONS
+def primes(n,m):
+    """Returns: a list that contains each prime between n and m.
+    
+    Example: primes(3,12) returns [3,5,7,11]
+             primes(-1,13) returns [2,3,5,7,11,13]
+
+    Precondition: n, m are ints with m >= n."""
+    assert type(n) == int, `n`+' is not an int'
+    assert type(m) == int, `m`+' is not an int'
+    assert n <= m, 'range ['+`n`+','+`m`+'] is invalid'
+    
+    x = []              # CHANGE THIS EXPRESSION
+    c = n                 # CHANGE THIS EXPRESSION
+
+    # inv: list x contains each prime in n..c-1
+    while c <= m:         # CHANGE THIS EXPRESSION
+        r=0
+        for y in range(2,int(math.sqrt(c))+1):
+            if c%y==0:         # CHANGE THIS EXPRESSION
+                r+=1
+                break
+        if r==0:
+            x.append(c)   # CHANGE THIS COMMAND
+
+        # Increment to next position
+        c = c + 1
+
+    # post: list x contains contains each prime in n..m
+    return x
+
+
+def count_all_letters(s1, s2):
+    """Returns: number of times the characters in s1 appear in s2
+
+    Each letter in s1 is treated separately.  Duplicates in s1
+    are ignored (but not ignored in s2).
+
+    Example: count_all_letters('ac', 'aaab') is 3
+    Example: count_all_letters('aeiou', word) gives the number of
+    vowels in string word (for some definitions of vowels)
+
+    Precondition: s1, s2 are strings"""
+    assert type(s1) == str, `s1`+' is not a string'
+    assert type(s2) == str, `s2`+' is not a string'
+    # STUB: IMPLEMENT ME
+    # Hint1: Don't nest one while loop in another; 
+    # use count_letter as a helper function
+    # Hint2: You need to find the unique elements 
+    # of s1 at the same time that you are counting
+    trueS1=list(s1)
+    trueS2=list(s2)
+    answer=0
+    for x in trueS1:
+        if trueS1.count(x)>1:
+            del x
+    for y in trueS1:
+        answer+=trueS2.count(x)
+    return answer
+    
+    # CHANGE THIS, IF NECESSARY
